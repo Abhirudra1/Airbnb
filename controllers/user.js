@@ -1,5 +1,17 @@
 
+const Listing = require("../models/listing");
 const User = require("../models/user");
+
+
+module.exports.showListing = async (req, res)=>{
+    let {id} = req.params;
+    const listing = await Listing.findById(id).populate({path: "reviews", populate: {path: "author"}}).populate("owner");
+    if(!listing){
+        // req.flash("error", "Listing you requested does not exist")
+        res.redirect("/listings")
+    }
+    res.render("listings/show.ejs", {listing})
+}
 
 
 module.exports.renderSignupForm = (req, res)=>{
